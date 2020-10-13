@@ -5,6 +5,7 @@
 /**                                                                 **/
 /**   EP1 - Fila de Prioridade                                      **/
 /**                                                                 **/
+/**   <Guilherme Elui de Souza>                   <11796152>        **/
 /**                                                                 **/
 /*********************************************************************/
 
@@ -47,6 +48,10 @@ void exibirLog(PFILA f){
   printf("]\n\n");
 }
 
+/* recebe como argumento uma fila f do tipo PFILA.
+ *      
+ *      return:
+ *          int que corresponde ao numero de elementos validos da fila. */
 int tamanho(PFILA f){
   int tam = 0;
   PONT end = f->fila->prox;
@@ -58,24 +63,34 @@ int tamanho(PFILA f){
   return tam;
 }
 
+/* inserirElemento recebe como argumentos uma fila f do tipo PFILA, uma id
+ * do tipo inteiro e uma prioridade do tipo float.
+ *      return: 
+ *          - false caso o elemento nao seja inserido
+ *          - true caso a insercao ocorra. */
 bool inserirElemento(PFILA f, int id, float prioridade){
   bool resposta = false;
   PONT novo;
 
+  //teste id valido
   if (id < 0 || id >= f->maxElementos) {
       return false;
   }
-  
+
+  //teste posicao vazia
   if(f->arranjo[id] != NULL) {
       return false;
   }
 
+  //alocacao de memoria para o novo elemento
   novo = (PONT) malloc(sizeof(ELEMENTO));
+  
+  //atribuicao dos valores passados por parametro
   novo->id = id;
   novo->prioridade = prioridade;
   f->arranjo[id] = novo;
   
-  //insercao logo antes do no cabeca (menor prioridade do que todos os outros elementos restantes)
+  //insercao logo antes do no cabeca (menor prioridade do que todos os outros elementos restantes).
   if (novo->prioridade < f->fila->ant->prioridade) {
       novo->prox = f->fila;
       novo->ant = f->fila->ant;
@@ -84,7 +99,7 @@ bool inserirElemento(PFILA f, int id, float prioridade){
       return true;
   }
 
-  //insercao logo apos o no cabeca(maior prioridade do que todos os outros elementos restantes)
+  //insercao logo apos o no cabeca(maior prioridade do que todos os outros elementos restantes).
   else if (novo->prioridade > f->fila->prox->prioridade) {
       novo->ant = f->fila;
       novo->prox = f->fila->prox;
@@ -93,6 +108,7 @@ bool inserirElemento(PFILA f, int id, float prioridade){
       return true;
   }
 
+  //insercao em outra posicao qualquer.
   else {
     PONT atual = f->fila;
     atual = atual->prox;
@@ -111,23 +127,32 @@ bool inserirElemento(PFILA f, int id, float prioridade){
   return resposta;
 }
 
+/* aumentarPrioridade recebe como argumentos uma fila do tipo PFILA,
+ * um id do tipo int, uma novaPrioridade do tipo float e aumenta a
+ * prioridade do elemento desejado, de modo a reposiciona-lo na fila.
+ *      return: 
+ *          - false caso nao seja possivel reduzir a prioridade
+ *          do elemento.
+ *          - true caso a operacao ocorra. */
 bool aumentarPrioridade(PFILA f, int id, float novaPrioridade){
   bool resposta = false;
   
+  //testes 
   if (id < 0 || id >= f->maxElementos) {return false;}
 
   else if(f->arranjo[id] == NULL) {return false;}
 
+  //teste novaPrioridade deve ser maior do que a atual.
   else if(f->arranjo[id]->prioridade >= novaPrioridade) {return false;}
 
   else {
+      //atribuicao novaPrioridade
       f->arranjo[id]->prioridade = novaPrioridade;
       PONT atual = f->arranjo[id];
-
       
       while (atual != f->fila) {
           if (f->arranjo[id]->prioridade > f->arranjo[id]->ant->prioridade) {
-
+              //correcao dos ponteiros.
               f->arranjo[id]->ant->ant->prox = f->arranjo[id];
               f->arranjo[id]->prox->ant = f->arranjo[id]->ant;
 
@@ -146,11 +171,23 @@ bool aumentarPrioridade(PFILA f, int id, float novaPrioridade){
   return resposta;
 }
 
+
+/* reduzirPrioridade recebe como argumentos uma fila do tipo PFILA,
+ * um id do tipo int, uma novaPrioridade do tipo float e diminui a
+ * prioridade do elemento desejado, de modo a reposiciona-lo na fila.
+ *      return:
+ *          - false caso nao seja possivel reduzir a prioridade
+ *            do elemento.
+ *          - true caso a operacao ocorra. */
 bool reduzirPrioridade(PFILA f, int id, float novaPrioridade){
   bool resposta = false;
 
+  //testes.
   if (id < 0 || id >= f->maxElementos) {return false;}
+  
   else if(f->arranjo[id] == NULL) {return false;}
+  
+  //novaPrioridade deve ser menor do que a atual.
   else if(f->arranjo[id]->prioridade <= novaPrioridade) {return false;}
 
   else {
@@ -160,7 +197,7 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade){
 
       while (atual != f->fila) {
           if (f->arranjo[id]->prioridade < f->arranjo[id]->prox->prioridade) {
-
+              //correcao do ponteiros.
               f->arranjo[id]->prox->prox->ant = f->arranjo[id];
               f->arranjo[id]->ant->prox = f->arranjo[id]->prox;
               f->arranjo[id]->prox->ant = f->arranjo[id]->ant;
@@ -175,9 +212,14 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade){
   return resposta;
 }
 
+/* removerElemento recebe uma fila f do tipo PFILA
+ * e exclui o primeiro elemento valido dela.
+ *      return:
+ *          endereco do elemento retirado da fila.*/
 PONT removerElemento(PFILA f){
   PONT resposta = NULL;
-
+  
+  //teste fila vazia.
   if(f->fila == f->fila->prox) {return NULL;}
   
   resposta = f->fila->prox;
@@ -188,12 +230,21 @@ PONT removerElemento(PFILA f){
   return resposta;
 }
 
+/* consultarPrioridade recebe como argumentos uma fila f do tipo PFILA,
+ * uma id do tipo int, uma resposta do tipo ponteiro para float armazena
+ * na memoria apontada pela variavel resposta o valor da prioridade consultada.
+ *      return:
+ *          - false caso id invalido ou elemento inexistente.
+ *          - caso contrario armazena na memoria apontada pela variavel resposta 
+ *            o valor da prioridade consultada e retorna true */
 bool consultarPrioridade(PFILA f, int id, float* resposta){
   bool resp = false;
   
+  //teste id valido
   if (id < 0 || id >= f->maxElementos) {
       return false;}
- 
+  
+  //teste posicao vazia
   else if (f->arranjo[id] == NULL) {return false;}
 
   else {
