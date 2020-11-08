@@ -42,7 +42,7 @@ void exibirLog(PFILA f){
     atual = atual->prox;
   }
 
-  printf("\nValores do arrajo:\n\[ ");
+  printf("\nValores do arrajo:\n \[ ");
   int x;
   for (x=0;x<f->maxElementos;x++) printf("%p ",f->arranjo[x]);
   printf("]\n\n");
