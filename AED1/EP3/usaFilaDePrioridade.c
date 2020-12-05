@@ -98,8 +98,7 @@ int main() {
   if(reduzirPrioridade(f, 4, 1)) printf("ok\n");
   else printf("nok (19) - esperado, elemento com id=4 nao existe\n");
   exibirLog(f);
-
-
+  
 
   return 0;
 }

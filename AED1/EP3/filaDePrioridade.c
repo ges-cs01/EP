@@ -38,18 +38,26 @@ void exibirLog(PFILA f){
 
 int tamanho(PFILA f){
   int tam = 0;
-  
-  /* COMPLETAR */
-  
+  for(int i = 0; i < f->elementosNoHeap; i++)
+    if(f->heap[i] != NULL) tam++;
   return tam;
 }
 
 bool inserirElemento(PFILA f, int id, float prioridade){
-  bool res = false;
-  
-  /* COMPLETAR */
-  
-  return res;
+  if(id < 0 || id >= f->maxElementos) return false;
+  if(f->arranjo[id] != NULL) return false;
+
+  PONT novo = malloc(sizeof(ELEMENTO));
+  novo->id = id;
+  novo->prioridade = prioridade;
+  f->arranjo[id] = novo;
+
+  f->heap[f->elementosNoHeap] = novo;
+  f->elementosNoHeap++;
+
+
+
+  return true;
 }
 
 bool aumentarPrioridade(PFILA f, int id, float novaPrioridade){
