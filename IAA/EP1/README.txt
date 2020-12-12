@@ -1,7 +1,4 @@
 ----------------------------------------------------------------------------------
-/* Guilherme Elui de Souza, 11796152 */
-
-----------------------------------------------------------------------------------
 - Compilação:   javac Main.java
 - Execução:     java -Xss100m Main <arquivo_de_entrada.txt> <arquivo_de_saida.png>
 
